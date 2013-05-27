@@ -150,7 +150,10 @@ Crafty.scene('Game', function() {
         usedCols.push(Crafty(arrayX[j]).at().x);
       }
 
-      
+      _.uniq(usedRows.sort(function(a, b) { return a - b; }));
+      _.uniq(usedCols.sort(function(a, b) { return a - b; }));
+
+      console.log(usedRows, usedCols);
 
     // if AI doesnt win, figure out what its best move is
 
