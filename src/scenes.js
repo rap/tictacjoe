@@ -85,7 +85,10 @@ Crafty.scene('Game', function() {
         posO = this.posTransform(arrayO),
         pos_ = this.posTransform(array_);
 
-    // test for user's win condition
+/*********************************************************************************
+ ********************* code to determine immediate player win ********************
+ *********************************************************************************/
+
     if(posX.length > 2) {
 
       for (i = 0; i <= posX.length - 2; i++) {
@@ -101,93 +104,105 @@ Crafty.scene('Game', function() {
         if(posX[i] == 2 && this.cellPattern(2, posX) == true) winFlag = true;
       }
     }
-    // TODO: do something if user wins
-    // console.log(winFlag);
+    
+    if(winFlag) {
+      Crafty.scene('Victory');
+    } else {
 
+/*********************************************************************************
+ ********************* AI code to determine immediate any wins *******************
+ *********************************************************************************/
 
+      // then test for the AI being able to make a winning move
+      if(posO.length >= 2) {
 
-    // then test for the AI being able to make a winning move
-    if(posO.length >= 2) {
+        for (i = 0; i <= pos_.length; i++) {
+          var tempO = posO;
 
-      var tempO = posO;
-
-      for (i = 0; i <= pos_.length; i++) {
-
-        // clone pos0, add current cell to it (to simulate choice), run tests
-        // if tests check out on this fake array HALT!!!! AND COMMIT TO WINNING
-        
-        for (j = 0; j < tempO.length, j++;) {
-          if (j == 0 && pos_[i] < tempO[j]) {
-            // push this.coordArray_[i] onto beginning of tempCoordArrayO
-            tempO.splice(0, 0, pos_[i]);
-          } else if(tempO.length - 1 == j && pos_[i] > tempO[j]) {
-            // push this.coordArray_[i] onto end of tempCoordArrayO
-            tempO.push(pos_[i])
-          } else if(pos_[i] > tempO[j] && pos_[i] < tempO[j + 1]) {
-            // push it in between the two values
-            tempO.splice(j + 1, 0, pos_[i]);
-          }
+          // clone pos0, add current cell to it (to simulate choice), run tests
+          // if tests check out on this fake array HALT!!!! AND COMMIT TO WINNING
           
+          for (var j = 0; j < tempO.length; j++) {
+
+            if (j == 0 && pos_[i] < tempO[j]) {
+              // push this.coordArray_[i] onto beginning of tempCoordArrayO
+              tempO.splice(0, 0, pos_[i]);
+            } else if(tempO.length - 1 == j && pos_[i] > tempO[j]) {
+              // push this.coordArray_[i] onto end of tempCoordArrayO
+              tempO.push(pos_[i])
+            } else if(pos_[i] > tempO[j] && pos_[i] < tempO[j + 1]) {
+              // push it in between the two values
+              tempO.splice(j + 1, 0, pos_[i]);
+            }
+
+          }
+
+          // vertical test first
+          if (this.matchVert(i, 3, tempO)) winFlagAI = true;
+
+          // horizontal test next
+          if (this.matchHoriz(i, 3, tempO)) winFlagAI = true;
+
+          // diagonal test
+          if(tempO[i] == 0 && this.cellPattern(4, tempO) == true) winFlagAI = true;
+          if(tempO[i] == 2 && this.cellPattern(2, tempO) == true) winFlagAI = true;
+        }
+      }
+
+      console.log(winFlagAI);
+    
+      if(winFlagAI) {
+        Crafty.scene('Defeat');
+      } else {
+
+/*******************************************************************************************
+ *****************************  AI code to take next-best move *****************************
+ *******************************************************************************************/
+
+        // cache unusable rows and columns by determining which are in use by other player  
+        for(j = 0; j < posX.length; j++) {
+          usedRows.push(Crafty(arrayX[j]).at().y);
+          usedCols.push(Crafty(arrayX[j]).at().x);
+          if (Crafty(arrayX[j])._dt == true) usedDT = true;
+          if (Crafty(arrayX[j])._db == true) usedDB = true;
         }
 
-        // vertical test first
-        if (this.matchVert(i, 3, tempO)) winFlagAI = true;
+        usedRows = _.uniq(usedRows.sort(function(a, b) { return a - b; }));
+        usedCols = _.uniq(usedCols.sort(function(a, b) { return a - b; }));
 
-        // horizontal test next
-        if (this.matchHoriz(i, 3, tempO)) winFlagAI = true;
+        // if AI doesnt win, figure out what its best move is
 
-        // diagonal test
-        if(tempO[i] == 0 && this.cellPattern(4, tempO) == true) winFlagAI = true;
-        if(tempO[i] == 2 && this.cellPattern(2, tempO) == true) winFlagAI = true;
+        var bestMoveFlag = {
+          id: null,
+          moves: 0
+        };
+
+        for (i = 0; i < pos_.length; i++) {
+
+          var curCell = Crafty(array_[i]),
+              tempMoveFlag = {
+                id: array_[i],
+                moves: 0
+              };
+
+          // figure out if a win is possible in v or in h
+          if(_.intersection([curCell.at().y], usedRows).length < 1) tempMoveFlag.moves = tempMoveFlag.moves + 1;
+          if(_.intersection([curCell.at().x], usedCols).length < 1) tempMoveFlag.moves = tempMoveFlag.moves + 1;
+
+          // if diagonal, figure out if diag wins are still possible
+          if(curCell._dt && curCell._dt != usedDT) tempMoveFlag.moves = tempMoveFlag.moves + 1;
+          if(curCell._db && curCell._db != usedDB) tempMoveFlag.moves = tempMoveFlag.moves + 1;
+
+          // if potential move sum > bestMoveFlag moves val, push i and moves to flag
+          if(bestMoveFlag.moves < tempMoveFlag.moves) {
+            bestMoveFlag = tempMoveFlag;
+          }
+        }
+
+        // move to i
+        Crafty(bestMoveFlag.id).removeComponent("Empty").addComponent("O");
       }
     }
-
-    // TODO: do something with winFlagAI
-
-
-
-    // cache unusable rows and columns by determining which are in use by other player  
-    for(j = 0; j < posX.length; j++) {
-      usedRows.push(Crafty(arrayX[j]).at().y);
-      usedCols.push(Crafty(arrayX[j]).at().x);
-      if (Crafty(arrayX[j])._dt == true) usedDT = true;
-      if (Crafty(arrayX[j])._db == true) usedDB = true;
-    }
-
-    usedRows = _.uniq(usedRows.sort(function(a, b) { return a - b; }));
-    usedCols = _.uniq(usedCols.sort(function(a, b) { return a - b; }));
-
-    // if AI doesnt win, figure out what its best move is
-
-    var bestMoveFlag = {
-      id: null,
-      moves: 0
-    };
-
-    for (i = 0; i < pos_.length; i++) {
-
-      var curCell = Crafty(array_[i]),
-          tempMoveFlag = {
-            id: array_[i],
-            moves: 0
-          };
-
-      // figure out if a win is possible in v or in h
-      if(_.intersection([curCell.at().y], usedRows).length < 1) tempMoveFlag.moves = tempMoveFlag.moves + 1;
-      if(_.intersection([curCell.at().x], usedCols).length < 1) tempMoveFlag.moves = tempMoveFlag.moves + 1;
-
-      // if diagonal, figure out if diag wins are still possible
-      if(curCell._dt && curCell._dt != usedDT) tempMoveFlag.moves = tempMoveFlag.moves + 1;
-      if(curCell._db && curCell._db != usedDB) tempMoveFlag.moves = tempMoveFlag.moves + 1;
-
-      // if potential move sum > bestMoveFlag moves val, push i and moves to flag
-      if(bestMoveFlag.moves < tempMoveFlag.moves) {
-        bestMoveFlag = tempMoveFlag;
-      }
-    }
-
-    // move to i
-    Crafty(bestMoveFlag.id).removeComponent("Empty").addComponent("O");
 
   });
 }, function() {
@@ -203,7 +218,34 @@ Crafty.scene('Game', function() {
 Crafty.scene('Victory', function() {
   // Display some text in celebration of the victory
   Crafty.e('2D, DOM, Text')
-    .text('All villages visited!')
+    .text('YOU WIN THE GAME!')
+    .attr({ x: 0, y: Game.height()/2 - 24, w: Game.width() })
+    .css($text_css);
+ 
+  // Give'em a round of applause!
+  Crafty.audio.play('applause');
+
+  // After a short delay, watch for the player to press a key, then restart
+  // the game when a key is pressed
+  var delay = true;
+  setTimeout(function() { delay = false; }, 5000);
+
+  this.restart_game = this.bind('KeyDown', function() {
+    if (!delay) {
+      Crafty.scene('Game');
+    }
+  });
+}, function() {
+  this.unbind('KeyDown', this.restart_game);
+});
+
+// Victory scene
+// -------------
+// Tells the player when they've won and lets them start a new game
+Crafty.scene('Defeat', function() {
+  // Display some text in celebration of the victory
+  Crafty.e('2D, DOM, Text')
+    .text('DUDE!!! YOU DEFINITELY LOST')
     .attr({ x: 0, y: Game.height()/2 - 24, w: Game.width() })
     .css($text_css);
  
