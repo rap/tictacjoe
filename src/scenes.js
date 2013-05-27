@@ -100,7 +100,7 @@ Crafty.scene('Game', function() {
       }
     }
     // TODO: do something if user wins
-    console.log(winFlag);
+    // console.log(winFlag);
 
 
 
@@ -145,27 +145,35 @@ Crafty.scene('Game', function() {
 
 
     // cache unusable rows and columns by determining which are in use by other player  
-      for(j = 0; j < posX.length; j++) {
-        usedRows.push(Crafty(arrayX[j]).at().y);
-        usedCols.push(Crafty(arrayX[j]).at().x);
-      }
+    for(j = 0; j < posX.length; j++) {
+      usedRows.push(Crafty(arrayX[j]).at().y);
+      usedCols.push(Crafty(arrayX[j]).at().x);
+    }
 
-      _.uniq(usedRows.sort(function(a, b) { return a - b; }));
-      _.uniq(usedCols.sort(function(a, b) { return a - b; }));
-
-      console.log(usedRows, usedCols);
+    usedRows = _.uniq(usedRows.sort(function(a, b) { return a - b; }));
+    usedCols = _.uniq(usedCols.sort(function(a, b) { return a - b; }));
 
     // if AI doesnt win, figure out what its best move is
 
-    for (i = 0; i <= pos_.length; i++) {
-      var bestMoveFlag = {
-        i: null,
-        moves: 0
-      }
+    var bestMoveFlag = {
+      id: null,
+      moves: 0
+    };
+
+    for (i = 0; i < pos_.length; i++) {
+      var curCell = Crafty(array_[i]),
+          tempMoveFlag = {
+            id: i,
+            moves: 0
+          };
 
       // figure out if a win is possible in v or in h
+      if(_.intersection([curCell.at().y], usedRows).length < 1) tempMoveFlag.moves = tempMoveFlag.moves + 1;
+      if(_.intersection([curCell.at().x], usedCols).length < 1) tempMoveFlag.moves = tempMoveFlag.moves + 1;
 
       // if diagonal, figure out if diag wins are still possible
+      
+
       // if potential move sum > bestMoveFlag moves val, push i and moves to flag
     }
 
