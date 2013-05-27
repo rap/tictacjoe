@@ -76,7 +76,9 @@ Crafty.scene('Game', function() {
         arrayO = Crafty("O"),
         array_ = Crafty("Empty"),
         usedRows = [],
-        usedCols = [];
+        usedCols = [],
+        usedDT = false,
+        usedDB = false;
 
     // set up position coordinate arrays for x, o, and blank
     var posX = this.posTransform(arrayX),
@@ -107,7 +109,7 @@ Crafty.scene('Game', function() {
     // then test for the AI being able to make a winning move
     if(posO.length >= 2) {
 
-      var tempO = this.posO;
+      var tempO = posO;
 
       for (i = 0; i <= pos_.length; i++) {
 
@@ -135,8 +137,8 @@ Crafty.scene('Game', function() {
         if (this.matchHoriz(i, 3, tempO)) winFlagAI = true;
 
         // diagonal test
-        if(this.tempO[i] == 0 && this.cellPattern(4, this.tempO) == true) winFlagAI = true;
-        if(this.tempO[i] == 2 && this.cellPattern(2, this.tempO) == true) winFlagAI = true;
+        if(tempO[i] == 0 && this.cellPattern(4, tempO) == true) winFlagAI = true;
+        if(tempO[i] == 2 && this.cellPattern(2, tempO) == true) winFlagAI = true;
       }
     }
 
@@ -148,6 +150,8 @@ Crafty.scene('Game', function() {
     for(j = 0; j < posX.length; j++) {
       usedRows.push(Crafty(arrayX[j]).at().y);
       usedCols.push(Crafty(arrayX[j]).at().x);
+      if (Crafty(arrayX[j])._dt == true) usedDT = true;
+      if (Crafty(arrayX[j])._db == true) usedDB = true;
     }
 
     usedRows = _.uniq(usedRows.sort(function(a, b) { return a - b; }));
@@ -161,9 +165,10 @@ Crafty.scene('Game', function() {
     };
 
     for (i = 0; i < pos_.length; i++) {
+
       var curCell = Crafty(array_[i]),
           tempMoveFlag = {
-            id: i,
+            id: array_[i],
             moves: 0
           };
 
@@ -172,12 +177,17 @@ Crafty.scene('Game', function() {
       if(_.intersection([curCell.at().x], usedCols).length < 1) tempMoveFlag.moves = tempMoveFlag.moves + 1;
 
       // if diagonal, figure out if diag wins are still possible
-      
+      if(curCell._dt && curCell._dt != usedDT) tempMoveFlag.moves = tempMoveFlag.moves + 1;
+      if(curCell._db && curCell._db != usedDB) tempMoveFlag.moves = tempMoveFlag.moves + 1;
 
       // if potential move sum > bestMoveFlag moves val, push i and moves to flag
+      if(bestMoveFlag.moves < tempMoveFlag.moves) {
+        bestMoveFlag = tempMoveFlag;
+      }
     }
 
     // move to i
+    Crafty(bestMoveFlag.id).removeComponent("Empty").addComponent("O");
 
   });
 }, function() {
