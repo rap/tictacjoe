@@ -153,7 +153,7 @@ Crafty.scene('Game', function() {
         }
       }
         
-
+      console.log(posO);
       console.log(winFlagAI);
     
       if(winFlagAI) {
@@ -168,7 +168,7 @@ Crafty.scene('Game', function() {
       // first let's look for a block
       
       if(posX.length >= 2) {
-        console.log(posX);
+
         for (i = 0; i <= pos_.length; i++) {
           var tempX = this.posTransform(arrayX);
           
