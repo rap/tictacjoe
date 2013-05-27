@@ -1,0 +1,21 @@
+
+if it's AI's turn:
+For each cell in tic tac toe matrix:	
+	if cell is empty or is opponents:
+		Look at all neighbors (however we do that, either with a node & directional vector schema or a coordinate system) 
+		find every 3 element vector (a vector should have a this object and two other objects; position does not matter, each should be either labeled as AI, Opponent, or empty)
+		run vector through count function 
+			switch:
+				if selecting this causes a win
+					return W
+				else if not selecting causes a lose
+					return L
+				else
+					return number of unobstructed rows from that position
+	if a vector causes a win:
+		just take it oh my god why even wait
+	else if a vector causes opponent to win:
+		block that shit wtf
+	else
+		take the vector	with the highest win count and select it's this object. Ties can be randomly resolved or just take fist.
+Wait for next turn.

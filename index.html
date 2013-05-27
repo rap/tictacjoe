@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+	<head>
+		<script src="lib/underscore.js"></script>
+		<script src="lib/crafty.js"></script>
+		<script src="src/game.js"></script>
+		<script src="src/components.js"></script>
+		<script src="src/scenes.js"></script>
+		<script>
+			window.addEventListener('load', Game.start);
+		</script>
+		<style type="text/css" media="screen">
+			body {
+			  background: black;
+			  text-align: center;
+			  color: #DDD;
+			  font-family: Arial;
+			}
+
+			.controls {
+			  color: #BBB;
+			}
+
+			#cr-stage { margin: 20px auto 0; }
+
+			.bottom {
+			  font-size: 12px;
+			  color: #888;
+			  margin-top: 50px;
+			}
+
+			.bottom a {
+			  color: #AAA;
+			}
+		</style>
+	</head>
+	<body>
+		<h2>LETTER AND CIRCLE GAME</h2>
+
+		<p>FRIEND!! CAN YOU OUTWIT A MACHINE IN THIS GAME OF DEVILRY?</p>
+
+		<p class="controls">IMPRESS YOUR CURSOR UPON THE GRID BELOW TO MARK IT</p>
+
+		<div id="cr-stage"></div>
+
+		<p class="bottom"></a>.
+	</body>
+</html>
