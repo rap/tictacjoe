@@ -209,7 +209,7 @@ Crafty.scene('Game', function() {
   // Remove our event binding from above so that we don't
   //  end up having multiple redundant event watchers after
   //  multiple restarts of the game
-  this.unbind('CellSet', this.show_victory);
+  this.unbind('CellSet', this.moveCallback);
 });
 
 // Victory scene
@@ -222,48 +222,42 @@ Crafty.scene('Victory', function() {
     .attr({ x: 0, y: Game.height()/2 - 24, w: Game.width() })
     .css($text_css);
  
+  
+  Crafty.e('2D, Canvas, Mouse, Color')
+  .color("#ff1132")
+  .attr({ x: 0, y: 0, w: Game.width(), h: Game.height() })
+  .bind('Click', function(event) {
+    Crafty.scene('Game');
+  });
+
   // Give'em a round of applause!
   Crafty.audio.play('applause');
 
-  // After a short delay, watch for the player to press a key, then restart
-  // the game when a key is pressed
-  var delay = true;
-  setTimeout(function() { delay = false; }, 5000);
-
-  this.restart_game = this.bind('KeyDown', function() {
-    if (!delay) {
-      Crafty.scene('Game');
-    }
-  });
-}, function() {
-  this.unbind('KeyDown', this.restart_game);
 });
 
 // Victory scene
 // -------------
 // Tells the player when they've won and lets them start a new game
 Crafty.scene('Defeat', function() {
+
+
+
   // Display some text in celebration of the victory
   Crafty.e('2D, DOM, Text')
     .text('DUDE!!! YOU DEFINITELY LOST')
     .attr({ x: 0, y: Game.height()/2 - 24, w: Game.width() })
     .css($text_css);
+
+  Crafty.e('2D, Canvas, Mouse, Color')
+    .color("#ff1132")
+    .attr({ x: 0, y: 0, w: Game.width(), h: Game.height() })
+    .bind('Click', function(event) {
+      Crafty.scene('Game');
+    });
  
   // Give'em a round of applause!
   Crafty.audio.play('applause');
 
-  // After a short delay, watch for the player to press a key, then restart
-  // the game when a key is pressed
-  var delay = true;
-  setTimeout(function() { delay = false; }, 5000);
-
-  this.restart_game = this.bind('KeyDown', function() {
-    if (!delay) {
-      Crafty.scene('Game');
-    }
-  });
-}, function() {
-  this.unbind('KeyDown', this.restart_game);
 });
 
 
