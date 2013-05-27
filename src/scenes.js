@@ -47,16 +47,16 @@ Crafty.scene('Game', function() {
     // tests everything in first col
     if(cArray[i] >= 0 && cArray[i] <= interval - 1) {
       
-      if(this.cellPattern(interval, cArray) == true) return true;
+      if(this.cellPattern(i, interval, cArray) == true) return true;
 
     }
   }
 
-  this.cellPattern = function(interval, cArray) {
-    for(j = i + 1; j < cArray.length; j++) {
+  this.cellPattern = function(i, interval, cArray) {
+    for(var j = i + 1; j < cArray.length; j++) {
       if(cArray[j] == cArray[i] + interval) {
 
-        for(k = j + 1; k < cArray.length; k++) {
+        for(var k = j + 1; k < cArray.length; k++) {
           if(cArray[k] == cArray[j] + interval) {
             return true;
           }
@@ -95,7 +95,7 @@ Crafty.scene('Game', function() {
 
     if(posX.length > 2) {
 
-      for (i = 0; i <= posX.length - 2; i++) {
+      for (var i = 0; i <= posX.length - 2; i++) {
 
         // vertical test first
         if (this.matchVert(i, 3, posX)) winFlag = true;
@@ -104,8 +104,8 @@ Crafty.scene('Game', function() {
         if (this.matchHoriz(i, 3, posX)) winFlag = true;
 
         // diagonal test
-        if(posX[i] == 0 && this.cellPattern(4, posX) == true) winFlag = true;
-        if(posX[i] == 2 && this.cellPattern(2, posX) == true) winFlag = true;
+        if(posX[i] == 0 && this.cellPattern(i, 4, posX) == true) winFlag = true;
+        if(posX[i] == 2 && this.cellPattern(i, 2, posX) == true) winFlag = true;
       }
     }
     
@@ -120,8 +120,13 @@ Crafty.scene('Game', function() {
       // then test for the AI being able to make a winning move
       if(posO.length >= 2) {
 
+<<<<<<< HEAD
         for (i = 0; i <= pos_.length; i++) {
           var tempO = this.posTransform(arrayO);
+=======
+        for (var i = 0; i <= pos_.length; i++) {
+          var tempO = posO;
+>>>>>>> 8fccc8dc92bb178c1a52657e6fa4818c77ba00c2
 
           // clone pos0, add current cell to it (to simulate choice), run tests
           // if tests check out on this fake array HALT!!!! AND COMMIT TO WINNING
@@ -148,8 +153,8 @@ Crafty.scene('Game', function() {
           if (this.matchHoriz(i, 1, tempO)) winFlagAI = true;
 
           // diagonal test
-          if(tempO[i] == 0 && this.cellPattern(4, tempO) == true) winFlagAI = true;
-          if(tempO[i] == 2 && this.cellPattern(2, tempO) == true) winFlagAI = true;
+          if(tempO[i] == 0 && this.cellPattern(i, 4, tempO) == true) winFlagAI = true;
+          if(tempO[i] == 2 && this.cellPattern(i, 2, tempO) == true) winFlagAI = true;
         }
       }
         
@@ -221,7 +226,7 @@ Crafty.scene('Game', function() {
       
       
         // cache unusable rows and columns by determining which are in use by other player  
-        for(j = 0; j < posX.length; j++) {
+        for(var j = 0; j < posX.length; j++) {
           usedRows.push(Crafty(arrayX[j]).at().y);
           usedCols.push(Crafty(arrayX[j]).at().x);
           if (Crafty(arrayX[j])._dt == true) usedDT = true;
@@ -235,7 +240,7 @@ Crafty.scene('Game', function() {
 
         
 
-        for (i = 0; i < pos_.length; i++) {
+        for (var i = 0; i < pos_.length; i++) {
 
           var curCell = Crafty(array_[i]),
               tempMoveFlag = {
@@ -339,7 +344,7 @@ Crafty.scene('Loading', function(){
     // These components' names are prefixed with "spr_"
     //  to remind us that they simply cause the entity
     //  to be drawn with a certain sprite
-    Crafty.sprite(100, 'assets/tictactoe.png', {
+    Crafty.sprite(Game.map_grid.tile.width, 'assets/tictactoe.png', {
       spr_blank:    [0, 0],
       spr_x:        [1, 0],
       spr_o:        [0, 1]
