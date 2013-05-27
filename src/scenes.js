@@ -120,13 +120,8 @@ Crafty.scene('Game', function() {
       // then test for the AI being able to make a winning move
       if(posO.length >= 2) {
 
-<<<<<<< HEAD
-        for (i = 0; i <= pos_.length; i++) {
-          var tempO = this.posTransform(arrayO);
-=======
         for (var i = 0; i <= pos_.length; i++) {
-          var tempO = posO;
->>>>>>> 8fccc8dc92bb178c1a52657e6fa4818c77ba00c2
+          var tempO = this.posTransform(arrayO);
 
           // clone pos0, add current cell to it (to simulate choice), run tests
           // if tests check out on this fake array HALT!!!! AND COMMIT TO WINNING
