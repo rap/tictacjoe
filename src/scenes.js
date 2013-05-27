@@ -84,6 +84,10 @@ Crafty.scene('Game', function() {
     var posX = this.posTransform(arrayX),
         posO = this.posTransform(arrayO),
         pos_ = this.posTransform(array_);
+    var bestMoveFlag = {
+          id: null,
+          moves: 0
+        };
 
 /*********************************************************************************
  ********************* code to determine immediate player win ********************
@@ -117,7 +121,7 @@ Crafty.scene('Game', function() {
       if(posO.length >= 2) {
 
         for (i = 0; i <= pos_.length; i++) {
-          var tempO = posO;
+          var tempO = this.posTransform(arrayO);
 
           // clone pos0, add current cell to it (to simulate choice), run tests
           // if tests check out on this fake array HALT!!!! AND COMMIT TO WINNING
@@ -141,13 +145,14 @@ Crafty.scene('Game', function() {
           if (this.matchVert(i, 3, tempO)) winFlagAI = true;
 
           // horizontal test next
-          if (this.matchHoriz(i, 3, tempO)) winFlagAI = true;
+          if (this.matchHoriz(i, 1, tempO)) winFlagAI = true;
 
           // diagonal test
           if(tempO[i] == 0 && this.cellPattern(4, tempO) == true) winFlagAI = true;
           if(tempO[i] == 2 && this.cellPattern(2, tempO) == true) winFlagAI = true;
         }
       }
+        
 
       console.log(winFlagAI);
     
@@ -158,7 +163,63 @@ Crafty.scene('Game', function() {
 /*******************************************************************************************
  *****************************  AI code to take next-best move *****************************
  *******************************************************************************************/
+      
+        
+      // first let's look for a block
+      
+      if(posX.length >= 2) {
+        console.log(posX);
+        for (i = 0; i <= pos_.length; i++) {
+          var tempX = this.posTransform(arrayX);
+          
 
+          //the same thing as before but with a bunch of copy/replacing 
+          for (var j = 0; j < tempX.length; j++) {
+
+            if (j == 0 && pos_[i] < tempX[j]) {
+              // push this.coordArray_[i] onto beginning of tempCoordArrayX
+              tempX.splice(0, 0, pos_[i]);
+            } else if(tempX.length - 1 == j && pos_[i] > tempX[j]) {
+              // push this.coordArray_[i] onto end of tempCoordArrayX
+              tempX.push(pos_[i])
+            } else if(pos_[i] > tempX[j] && pos_[i] < tempX[j + 1]) {
+              // push it in between the two values
+              tempX.splice(j + 1, 0, pos_[i]);
+            }
+          }
+
+          // vertical test first
+          if (this.matchVert(i, 3, tempX)) {
+              bestMoveFlag = {
+                id: array_[i],
+                moves: 9
+              };
+          }
+          // horizontal test next
+          if (this.matchHoriz(i, 1, tempX)) {
+               bestMoveFlag = {
+                id: array_[i],
+                moves: 9
+              };
+          }
+
+          // diagonal test
+          if(tempX[i] == 0 && this.cellPattern(4, tempX) == true) {
+                    bestMoveFlag = {
+                id: array_[i],
+                moves: 9
+              };
+          }
+          if(tempX[i] == 2 && this.cellPattern(2, tempX) == true) {
+                    bestMoveFlag = {
+                id: array_[i],
+                moves: 9
+              };
+          }
+        }
+      }
+      
+      
         // cache unusable rows and columns by determining which are in use by other player  
         for(j = 0; j < posX.length; j++) {
           usedRows.push(Crafty(arrayX[j]).at().y);
@@ -172,10 +233,7 @@ Crafty.scene('Game', function() {
 
         // if AI doesnt win, figure out what its best move is
 
-        var bestMoveFlag = {
-          id: null,
-          moves: 0
-        };
+        
 
         for (i = 0; i < pos_.length; i++) {
 
@@ -198,7 +256,7 @@ Crafty.scene('Game', function() {
             bestMoveFlag = tempMoveFlag;
           }
         }
-
+        console.log(bestMoveFlag);
         // move to i
         Crafty(bestMoveFlag.id).removeComponent("Empty").addComponent("O");
       }
