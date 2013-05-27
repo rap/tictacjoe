@@ -17,3 +17,5 @@ tictacjoe
     	|LI LI LI LI||LI||LI||LI||LI LI LI LI|
  	,,;;,;;;,;;;,;;;,;;;,;;;,;;;,;;,;;;,;;;,;;,,
 	;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+    A Game For Vice Presidents Only!!! NO BARACKS ALLLOWWED
