@@ -31,7 +31,10 @@ Crafty.c('Empty', {
 
 Crafty.c('X', {
   _val: "",
+  joeArray: [0, 1, 2, 3, 4, 5, 6, 7, 8],
   init: function() {
+    var joeVal = this.joeArray.splice(Crafty.math.randomInt(0, this.joeArray.length - 1), 1)
+    // this.requires('spr_joe' + joeVal);
     this.requires('spr_x');
     this._val = "x";
   },
@@ -94,6 +97,8 @@ Crafty.c('Cell', {
     if(this.has("Empty")) {
       this.removeComponent("Empty").addComponent("X");
     }
+
+    console.log(this);
 
     Crafty.trigger('CellSet', this);
   }
