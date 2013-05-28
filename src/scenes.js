@@ -345,20 +345,21 @@ Crafty.scene('Loading', function(){
     //  to be drawn with a certain sprite
     Crafty.sprite(Game.map_grid.tile.width, 'assets/tictactoe.png', {
       spr_blank:    [0, 0],
+      spr_x:        [1, 0],
       spr_o:        [0, 1]
     });
 
     Crafty.sprite(Game.map_grid.tile.width, 'assets/joes.jpg', {
       spr_joe0:    [0, 0],
-      spr_joe1:    [0, 1],
-      spr_joe2:    [0, 2],
-      spr_joe3:    [0, 3],
-      spr_joe4:    [0, 4],
-      spr_joe5:    [0, 5],
-      spr_joe6:    [0, 6],
-      spr_joe7:    [0, 7],
-      spr_joe8:    [0, 8],
-      spr_joe9:    [0, 9]
+      spr_joe1:    [1, 0],
+      spr_joe2:    [2, 0],
+      spr_joe3:    [3, 0],
+      spr_joe4:    [4, 0],
+      spr_joe5:    [5, 0],
+      spr_joe6:    [6, 0],
+      spr_joe7:    [7, 0],
+      spr_joe8:    [8, 0],
+      spr_joe9:    [9, 0]
     });
 
     // Now that our sprites are ready to draw, start the game
