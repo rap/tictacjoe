@@ -335,7 +335,7 @@ Crafty.scene('Loading', function(){
     .css($text_css);
  
   // Load our sprite map image
-  Crafty.load(['assets/tictactoe.png'], function(){
+  Crafty.load(['assets/tictactoe.png', 'assets/joes.jpg'], function(){
     // Once the image is loaded...
  
     // Define the individual sprites in the image
@@ -347,6 +347,19 @@ Crafty.scene('Loading', function(){
       spr_blank:    [0, 0],
       spr_x:        [1, 0],
       spr_o:        [0, 1]
+    });
+
+    Crafty.sprite(Game.map_grid.tile.width, 'assets/joes.jpg', {
+      spr_joe0:    [0, 0],
+      spr_joe1:    [1, 0],
+      spr_joe2:    [2, 0],
+      spr_joe3:    [3, 0],
+      spr_joe4:    [4, 0],
+      spr_joe5:    [5, 0],
+      spr_joe6:    [6, 0],
+      spr_joe7:    [7, 0],
+      spr_joe8:    [8, 0],
+      spr_joe9:    [9, 0]
     });
 
     // Now that our sprites are ready to draw, start the game
