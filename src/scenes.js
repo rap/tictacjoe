@@ -45,6 +45,7 @@ Crafty.scene('Game', function() {
 
   this.matchHoriz = function(i, interval, cArray) {
     // tests everything in first col
+    
     if(cArray[i] >= 0 && cArray[i] <= interval - 1) {
       
       if(this.cellPattern(i, interval, cArray) == true) return true;
@@ -57,7 +58,7 @@ Crafty.scene('Game', function() {
       if(cArray[j] == cArray[i] + interval) {
 
         for(var k = j + 1; k < cArray.length; k++) {
-          if(cArray[k] == cArray[j] + interval) {
+          if(cArray[k] == cArray[i] + 2*interval) {
             return true;
           }
         }
@@ -140,21 +141,22 @@ Crafty.scene('Game', function() {
             }
 
           }
+          for (var j = 0; j < tempO.length; j++) {
 
-          // vertical test first
-          if (this.matchVert(i, 3, tempO)) winFlagAI = true;
+            // vertical test first
+            if (this.matchVert(i, 3, tempO)) winFlagAI = true;
 
-          // horizontal test next
-          if (this.matchHoriz(i, 1, tempO)) winFlagAI = true;
+            // horizontal test next
+            if (this.matchHoriz(i, 3, tempO)) winFlagAI = true;
 
-          // diagonal test
-          if(tempO[i] == 0 && this.cellPattern(i, 4, tempO) == true) winFlagAI = true;
-          if(tempO[i] == 2 && this.cellPattern(i, 2, tempO) == true) winFlagAI = true;
+            // diagonal test
+            if(tempO[i] == 0 && this.cellPattern(i, 4, tempO) == true) winFlagAI = true;
+            if(tempO[i] == 2 && this.cellPattern(i, 2, tempO) == true) winFlagAI = true;
+          }
         }
       }
         
-      console.log(posO);
-      console.log(winFlagAI);
+      
     
       if(winFlagAI) {
         Crafty.scene('Defeat');
@@ -169,7 +171,7 @@ Crafty.scene('Game', function() {
       
       if(posX.length >= 2) {
 
-        for (i = 0; i <= pos_.length; i++) {
+        for (var i = 0; i <= pos_.length; i++) {
           var tempX = this.posTransform(arrayX);
           
 
@@ -188,34 +190,36 @@ Crafty.scene('Game', function() {
             }
           }
 
-          // vertical test first
-          if (this.matchVert(i, 3, tempX)) {
-              bestMoveFlag = {
-                id: array_[i],
-                moves: 9
-              };
-          }
-          // horizontal test next
-          if (this.matchHoriz(i, 1, tempX)) {
-               bestMoveFlag = {
-                id: array_[i],
-                moves: 9
-              };
-          }
+          for(var j = 0; j<tempX.length;j++){
+            // vertical test first
+           if (this.matchVert(j, 3, tempX)) {
+                bestMoveFlag = {
+                  id: array_[i],
+                  moves: 9
+                };
+            }
+            // horizontal test next
+            if (this.matchHoriz(j, 3, tempX)) {
+                 bestMoveFlag = {
+                  id: array_[i],
+                  moves: 9
+                };
+            }
 
-          // diagonal test
-          if(tempX[i] == 0 && this.cellPattern(4, tempX) == true) {
-                    bestMoveFlag = {
-                id: array_[i],
-                moves: 9
-              };
-          }
-          if(tempX[i] == 2 && this.cellPattern(2, tempX) == true) {
-                    bestMoveFlag = {
-                id: array_[i],
-                moves: 9
-              };
-          }
+            // diagonal test
+           if(tempX[i] == 0 && this.cellPattern(j,4, tempX) == true) {
+                      bestMoveFlag = {
+                  id: array_[i],
+                  moves: 9
+                };
+            }
+            if(tempX[i] == 2 && this.cellPattern(j,2, tempX) == true) {
+                      bestMoveFlag = {
+                  id: array_[i],
+                  moves: 9
+                };
+            }
+         }
         }
       }
       
