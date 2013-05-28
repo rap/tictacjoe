@@ -33,10 +33,14 @@ Crafty.c('X', {
   _val: "",
   joeArray: [0, 1, 2, 3, 4, 5, 6, 7, 8],
   init: function() {
+    // reload the array if the user plays enough games to empty it
+    if (this.joeArray.length < 1) this.joeArray = [0, 1, 2, 3, 4, 5, 6, 7, 8];
+
+    // remove the number from the array so we don't get any duplicates
     var joeVal = this.joeArray.splice(Crafty.math.randomInt(0, this.joeArray.length - 1), 1);
     var joeSprite = 'spr_joe' + joeVal;
+    
     this.requires(joeSprite);
-    // this.requires('spr_x');
     this._val = "x";
   },
   val: function(state) {

@@ -112,6 +112,9 @@ Crafty.scene('Game', function() {
     
     if(winFlag) {
       Crafty.scene('Victory');
+    } else if (array_.length < 1) {
+      // check for a tie
+      Crafty.scene('Tie');
     } else {
 
 /*********************************************************************************
@@ -256,7 +259,7 @@ Crafty.scene('Game', function() {
           if(curCell._db && curCell._db != usedDB) tempMoveFlag.moves = tempMoveFlag.moves + 1;
 
           // if potential move sum > bestMoveFlag moves val, push i and moves to flag
-          if(bestMoveFlag.moves < tempMoveFlag.moves) {
+          if(bestMoveFlag.moves <= tempMoveFlag.moves) {
             bestMoveFlag = tempMoveFlag;
           }
         }
@@ -297,9 +300,30 @@ Crafty.scene('Victory', function() {
 
 });
 
-// Victory scene
+// Tie scene
 // -------------
-// Tells the player when they've won and lets them start a new game
+Crafty.scene('Tie', function() {
+
+  // Display some text in celebration of the victory
+  Crafty.e('2D, DOM, Text')
+    .text('OH MY GOD. . . . YOU TIED.. . . . ')
+    .attr({ x: 0, y: Game.height()/2 - 24, w: Game.width() })
+    .css($text_css);
+
+  Crafty.e('2D, Canvas, Mouse, Color')
+    .color("#ff1132")
+    .attr({ x: 0, y: 0, w: Game.width(), h: Game.height() })
+    .bind('Click', function(event) {
+      Crafty.scene('Game');
+    });
+ 
+  // Give'em a round of applause!
+  Crafty.audio.play('applause');
+
+});
+
+// Defeat scene
+// -------------
 Crafty.scene('Defeat', function() {
 
 
